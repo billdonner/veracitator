@@ -11,12 +11,12 @@ import Darwin
 import Foundation
 import q20kshare
 
+import ArgumentParser
 
 let ChatGPTModel = "text-davinci-003"
 let ChatGPTURLString = "https://api.openai.com/v1/completions"
  
 
-import ArgumentParser
 struct Veracitator: ParsableCommand {
  
   static let configuration = CommandConfiguration(
@@ -89,8 +89,6 @@ struct Veracitator: ParsableCommand {
       print(">Veracitator Exiting Normally - Pumped:\(ctx.pumpCount)" + " Bad Json: \( ctx.badJsonCount)" + " Network Issues: \(ctx.networkGlitches)\n")
     }// otherwise we should exit
   }
-  
 
-  
 Veracitator.main()
 
