@@ -42,7 +42,7 @@ struct Veracitator: ParsableCommand {
   
   static let configuration = CommandConfiguration(
     abstract: "Step 3: Veracitator executes a script file from Prepper, sending each prompt to (another) Chatbot and generates a single output file of JSON data which is read by Blender.",
-    version: "0.2.1",
+    version: "0.2.13",
     subcommands: [],
     defaultSubcommand: nil,
     helpNames: [.long, .short]
