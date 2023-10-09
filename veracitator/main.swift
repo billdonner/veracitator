@@ -15,12 +15,32 @@ import ArgumentParser
 
 let ChatGPTModel = "text-davinci-003"
 let ChatGPTURLString = "https://api.openai.com/v1/completions"
-//public  func getOpinion(_ xitem:String,source:String,originalID:String) throws -> Opinion?
-func handleItem(ctx:ChatContext,item:String,jsonOut:FileHandle?) throws {
-  let opinion = try getOpinion(item, source:ChatGPTModel)
-  if let opinion = opinion {
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = .prettyPrinted
+
+public  func getOpinions(_ item:String,source:String) throws -> [Opinion] {
+  guard  item != "" else { print("** nothing found in getOpinions from \(item)"); return [] }
+  var opinions:[Opinion] = []
+  do {
+    let aiopinions = try JSONDecoder().decode([AIOpinion] .self,from:item.data(using:.utf8)!)
+    opinions =  aiopinions.map { $0.toOpinion(source: source)}
+  }
+  catch {
+    do {
+      let aiopinions = try JSONDecoder().decode([AIAltOpinion] .self,from:item.data(using:.utf8)!)
+      opinions = aiopinions.map {$0.toOpinion(source: source)!}
+    }
+    catch {
+      print("*** No opinion found \(error)\n item: '\(item)'")
+    }
+  }
+  return opinions
+}
+
+func handleItems(ctx:ChatContext,item:String,jsonOut:FileHandle?) throws {
+  let opinions = try getOpinions(item, source:ChatGPTModel)
+  let encoder = JSONEncoder()
+  encoder.outputFormatting = .prettyPrinted
+  
+ for opinion  in opinions {
     // 3. write JSON to file
     if let fileHandle = jsonOut  {
       // append response with prepended comma if we need one
@@ -42,7 +62,7 @@ struct Veracitator: ParsableCommand {
   
   static let configuration = CommandConfiguration(
     abstract: "Step 3: Veracitator executes a script file from Prepper, sending each prompt to (another) Chatbot and generates a single output file of JSON data which is read by Blender.",
-    version: "0.2.13",
+    version: "0.3.1",
     subcommands: [],
     defaultSubcommand: nil,
     helpNames: [.long, .short]
@@ -105,16 +125,22 @@ struct Veracitator: ParsableCommand {
     let jsonOutHandle = try prepOutputChannels(ctx:ctx)
     do {
       if let jsonOutHandle = jsonOutHandle {
-        try pumpItUp(ctx:ctx,templates:templates, jsonOut: jsonOutHandle, cleaner: {s in
-          [s.trimmingCharacters(in: .whitespacesAndNewlines)]
+        try pumpItUp(ctx:ctx,templates:templates, jsonOut: jsonOutHandle, justOnce:true, cleaner: {s in
+        let zz = s.trimmingCharacters(in: .whitespacesAndNewlines)
+         let xx =  String(zz.dropLast(2))
+         // print(xx)
+          return [xx]
         },itemHandler: { x,y,z in
-          try handleItem(ctx: x, item: y, jsonOut: z)
+          try handleItems(ctx: x, item: y, jsonOut: z)
         })
       }
     }
     catch {
       if error as? PumpingErrors == PumpingErrors.reachedMaxLimit {
         print("\n>Veracitator reached max limit of \(ctx.max) prompts sent to the AI")
+      } else
+      if error as? PumpingErrors == PumpingErrors.reachedEndOfScript {
+        print("\n>Veracitator reached end of input script \(ctx.pumpCount) prompts sent to the AI")
       }
       else {
         print ("Unknown error: \(error)")
