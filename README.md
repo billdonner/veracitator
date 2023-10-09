@@ -1,6 +1,8 @@
 # VERACITATOR - Read a veracity script and Pump thru ChatGPT
 
-Freeport.Software - 0.3.1
+Freeport.Software - 0.3.2
+
+keep batchLim constant <=7 otherwise chatgpt truncates
 ```
 OVERVIEW: Step 3: Veracitator executes a script file from Prepper, sending each
 prompt to (another) Chatbot and generates a single output file of JSON data
