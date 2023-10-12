@@ -18,15 +18,19 @@ let ChatGPTURLString = "https://api.openai.com/v1/completions"
 
 public  func getOpinions(_ item:String,source:String) throws -> [Opinion] {
   guard  item != "" else { print("** nothing found in getOpinions from \(item)"); return [] }
+  var xitem = item
+  if xitem.last != "]" {
+    xitem += "]"
+  }
   var opinions:[Opinion] = []
   do {
-    let aiopinions = try JSONDecoder().decode([AIOpinion] .self,from:item.data(using:.utf8)!)
+    let aiopinions = try JSONDecoder().decode([AIOpinion] .self,from:xitem.data(using:.utf8)!)
     opinions =  aiopinions.map { $0.toOpinion(source: source)}
   }
   catch {
     do {
-      let aiopinions = try JSONDecoder().decode([AIAltOpinion] .self,from:item.data(using:.utf8)!)
-      opinions = aiopinions.map {$0.toOpinion(source: source)!}
+      let aiopinions = try JSONDecoder().decode([AIAltOpinion] .self,from:xitem.data(using:.utf8)!)
+      opinions = aiopinions.map {$0.toOpinion(source: source)}
     }
     catch {
       print("*** No opinion found \(error)\n item: '\(item)'")
