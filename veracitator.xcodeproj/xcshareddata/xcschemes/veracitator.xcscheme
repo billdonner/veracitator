@@ -52,11 +52,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "file:///Users/billdonner/Desktop/fs/Between_2_3.txt"
+            argument = "file:///Users/fs/Between_2_3.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "file:///Users/billdonner/Desktop/fs/Between_3_4.json"
+            argument = "file:///Users/fs/Between_3_4.json"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -72,7 +72,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--max 1"
+            argument = "--max 10"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument

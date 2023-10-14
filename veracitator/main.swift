@@ -66,7 +66,7 @@ struct Veracitator: ParsableCommand {
   
   static let configuration = CommandConfiguration(
     abstract: "Step 3: Veracitator executes a script file from Prepper, sending each prompt to (another) Chatbot and generates a single output file of JSON data which is read by Blender.",
-    version: "0.3.1",
+    version: "0.3.4",
     subcommands: [],
     defaultSubcommand: nil,
     helpNames: [.long, .short]
@@ -142,12 +142,17 @@ struct Veracitator: ParsableCommand {
     catch {
       if error as? PumpingErrors == PumpingErrors.reachedMaxLimit {
         print("\n>Veracitator reached max limit of \(ctx.max) prompts sent to the AI")
+        print(">Veracitator Exiting Normally - Pumped:\(ctx.pumpCount)" + " Bad Json: \( ctx.badJsonCount)" + " Network Issues: \(ctx.networkGlitches)\n")
+        Veracitator.exit()
       } else
       if error as? PumpingErrors == PumpingErrors.reachedEndOfScript {
         print("\n>Veracitator reached end of input script \(ctx.pumpCount) prompts sent to the AI")
+        print(">Veracitator Exiting Normally - Pumped:\(ctx.pumpCount)" + " Bad Json: \( ctx.badJsonCount)" + " Network Issues: \(ctx.networkGlitches)\n")
+        Veracitator.exit()
       }
       else {
         print ("Unknown error: \(error)")
+        Veracitator.exit()
       }
     }
     
