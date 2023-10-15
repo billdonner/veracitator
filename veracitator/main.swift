@@ -66,7 +66,7 @@ struct Veracitator: ParsableCommand {
   
   static let configuration = CommandConfiguration(
     abstract: "Step 3: Veracitator executes a script file from Prepper, sending each prompt to (another) Chatbot and generates a single output file of JSON data which is read by Blender.",
-    version: "0.3.4",
+    version: "0.3.5",
     subcommands: [],
     defaultSubcommand: nil,
     helpNames: [.long, .short]
@@ -103,7 +103,7 @@ struct Veracitator: ParsableCommand {
   
   func run() throws {
     print(">Veracitator Command Line: \(CommandLine.arguments)")
-    print(">Veracitator is STEP3 running at \(Date())")
+    print(">Veracitator is running at \(Date())")
     
     let apiKey = try getAPIKey()
     

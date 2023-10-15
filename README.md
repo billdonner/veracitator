@@ -1,6 +1,6 @@
 # VERACITATOR - Read a veracity script and Pump thru ChatGPT
 
-Freeport.Software - 0.3.4 
+Freeport.Software - 0.3.5 
 
 keep batchLim constant <=7 otherwise chatgpt truncates
 ```
