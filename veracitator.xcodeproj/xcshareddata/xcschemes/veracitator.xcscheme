@@ -72,7 +72,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--max 10"
+            argument = "--max 100"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
